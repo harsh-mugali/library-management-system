@@ -48,3 +48,12 @@ export const updateBook = async (id, data) => {
     console.error("Error updating book:", error);
   }
 };
+
+export const assignBook = async (data) => {
+  try {
+    const res = await API.post("/assign-book", data);
+    return res.data;
+  } catch (error) {
+    console.error("Error assigning book:", error);
+  }
+};

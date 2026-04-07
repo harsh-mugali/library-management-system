@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request
 from models.book_model import get_all_books, add_book, update_book, delete_book
+from flask import request, jsonify
+from utils.db import get_db_connection
 
 book_routes = Blueprint("book_routes", __name__)
 
@@ -49,3 +51,80 @@ def remove_book(book_id):
     delete_book(book_id)
 
     return jsonify({"message": "Book deleted successfully"})
+
+@book_routes.route("/assign-book", methods=["POST"])
+def assign_book():
+
+    data = request.json
+
+    book_id = data["book_id"]
+    user_id = data["user_id"]
+    issue_date = data["issue_date"]
+    due_date = data["due_date"]
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Check available copies
+    cursor.execute("SELECT total_copies FROM books WHERE id=%s", (book_id,))
+    book = cursor.fetchone()
+
+    if not book or book[0] <= 0:
+        return jsonify({"error": "Book not available"}), 400
+
+    # Insert into issued_books
+    query = """
+    INSERT INTO issued_books (book_id,user_id,issue_date,due_date)
+    VALUES (%s,%s,%s,%s)
+    """
+
+    cursor.execute(query,(book_id,user_id,issue_date,due_date))
+
+    # Reduce book copies
+    cursor.execute(
+        "UPDATE books SET total_copies = total_copies - 1 WHERE id=%s",
+        (book_id,)
+    )
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({"message":"Book assigned successfully"})
+
+@book_routes.route("/return-book/<int:id>", methods=["PUT"])
+def return_book(id):
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # get book id
+    cursor.execute("SELECT book_id FROM issued_books WHERE id=%s",(id,))
+    book = cursor.fetchone()
+
+    if not book:
+        return jsonify({"error":"Record not found"}),404
+
+    book_id = book[0]
+
+    # mark returned
+    cursor.execute("""
+        UPDATE issued_books
+        SET returned = TRUE, return_date = CURDATE()
+        WHERE id=%s
+    """,(id,))
+
+    # increase copies
+    cursor.execute("""
+        UPDATE books
+        SET total_copies = total_copies + 1
+        WHERE id=%s
+    """,(book_id,))
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({"message":"Book returned successfully"})

@@ -5,6 +5,7 @@ import IssuedChart from "../../components/dashboard/IssuedChart";
 import { getDashboardStats } from "../../services/dashboardService";
 import AddBookPage from "./AddBookPage";
 import BooksPage from "./BooksPage";
+import AssignBookPage from "./AssignBookPage";
 
 function AdminDashboard() {
 
@@ -73,6 +74,10 @@ function AdminDashboard() {
         {/* Add Book Page */}
 
         {activePage === "addBook" && <AddBookPage />}
+
+        {/* Assign Book Page */}
+
+        {activePage === "assignBook" && <AssignBookPage />}
 
       </div>
 
