@@ -15,3 +15,18 @@ export const getBooks = async () => {
 
   }
 };
+
+export const addBook = async (bookData) => {
+  try{
+
+  const res = await API.post("/books",bookData);
+
+  return res.data;
+
+  }catch(error){
+
+  console.error("Error adding book:",error);
+
+  }
+
+};
