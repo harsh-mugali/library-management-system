@@ -3,60 +3,82 @@ import Sidebar from "../../components/layout/Sidebar";
 import StatsCards from "../../components/dashboard/StatsCards";
 import IssuedChart from "../../components/dashboard/IssuedChart";
 import { getDashboardStats } from "../../services/dashboardService";
+import AddBookPage from "./AddBookPage";
+import BooksPage from "./BooksPage";
 
-function AdminDashboard(){
+function AdminDashboard() {
 
-const [stats,setStats] = useState({
-total_books:0,
-total_users:0,
-issued_books:0,
-returned_books:0
-});
+  const [activePage, setActivePage] = useState("dashboard");
 
-const [chartData,setChartData] = useState([]);
+  const [stats, setStats] = useState({
+    total_books: 0,
+    total_users: 0,
+    issued_books: 0,
+    returned_books: 0
+  });
 
-useEffect(()=>{
-loadDashboard();
-},[]);
+  const [chartData, setChartData] = useState([]);
 
-const loadDashboard = async () => {
+  useEffect(() => {
+    loadDashboard();
+  }, []);
 
-const data = await getDashboardStats();
+  const loadDashboard = async () => {
 
-setStats(data);
+    const data = await getDashboardStats();
 
-setChartData([
-{ name:"Issued", value:data.issued_books },
-{ name:"Returned", value:data.returned_books }
-]);
+    setStats(data);
 
-};
+    setChartData([
+      { name: "Issued", value: data.issued_books },
+      { name: "Returned", value: data.returned_books }
+    ]);
 
-return(
+  };
 
-<div className="flex min-h-screen bg-gray-100">
+  return (
 
-<Sidebar/>
+    <div className="flex min-h-screen bg-gray-100">
 
-<div className="flex-1 p-8">
+      <Sidebar setActivePage={setActivePage} />
 
-<h1 className="text-3xl font-bold mb-8">
-Dashboard
-</h1>
+      <div className="flex-1 p-8">
 
-<StatsCards stats={stats}/>
+        {/* Dashboard Page */}
 
-<div className="grid grid-cols-2 gap-6">
+        {activePage === "dashboard" && (
 
-<IssuedChart chartData={chartData}/>
+          <>
 
-</div>
+            <h1 className="text-3xl font-bold mb-8">
+              Dashboard
+            </h1>
 
-</div>
+            <StatsCards stats={stats} />
 
-</div>
+            <div className="grid grid-cols-2 gap-6">
 
-);
+              <IssuedChart chartData={chartData} />
+
+            </div>
+
+          </>
+
+        )}
+
+        {/* Books Page */}
+
+        {activePage === "books" && <BooksPage />}
+
+        {/* Add Book Page */}
+
+        {activePage === "addBook" && <AddBookPage />}
+
+      </div>
+
+    </div>
+
+  );
 
 }
 
