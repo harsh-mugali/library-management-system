@@ -7,6 +7,10 @@ import AddBookPage from "./AddBookPage";
 import BooksPage from "./BooksPage";
 import AssignBookPage from "./AssignBookPage";
 import ReturnBookPage from "./ReturnBookPage";
+import RecentActivity from "../../components/dashboard/RecentActivity";
+import { getRecentActivity } from "../../services/dashboardService";
+import TopBooks from "../../components/dashboard/TopBooks";
+import { getTopBooks } from "../../services/dashboardService";
 
 function AdminDashboard() {
 
@@ -20,6 +24,8 @@ function AdminDashboard() {
   });
 
   const [chartData, setChartData] = useState([]);
+  const [activities, setActivities] = useState([]);
+  const [topBooks, setTopBooks] = useState([]);
 
   useEffect(() => {
     loadDashboard();
@@ -29,14 +35,18 @@ function AdminDashboard() {
 
   const loadDashboard = async () => {
 
-    const data = await getDashboardStats();
+    const statsData = await getDashboardStats();
 
-    setStats(data);
+    setStats(statsData);
 
     setChartData([
-      { name: "Issued", value: data.issued_books },
-      { name: "Returned", value: data.returned_books }
+      { name: "Issued", value: statsData.issued_books },
+      { name: "Returned", value: statsData.returned_books }
     ]);
+    const activityData = await getRecentActivity();
+    setActivities(activityData);
+    const topBooksData = await getTopBooks();
+    setTopBooks(topBooksData);
 
   };
 
@@ -63,6 +73,12 @@ function AdminDashboard() {
             <div className="grid grid-cols-2 gap-6">
 
               <IssuedChart chartData={chartData} />
+              <RecentActivity activities={activities} />
+            </div>
+
+            <div className="mt-6">
+
+              <TopBooks books={topBooks} />
 
             </div>
 
@@ -88,7 +104,7 @@ function AdminDashboard() {
 
       </div>
 
-    </div>
+    </div >
 
   );
 

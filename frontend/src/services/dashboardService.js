@@ -8,19 +8,31 @@ const defaultStats = {
 };
 
 export const getDashboardStats = async () => {
-
   try {
-
     const res = await API.get("/dashboard");
-
     return res.data;
-
   } catch (error) {
-
     console.error("Dashboard API Error:", error);
-
     return defaultStats;
-
   }
+};
 
+export const getRecentActivity = async () => {
+try {
+const res = await API.get("/recent-activity");
+return res.data;
+} catch (error) {
+console.error("Recent activity error:", error);
+return [];
+}
+};
+
+export const getTopBooks = async () => {
+  try {
+    const res = await API.get("/top-books");
+    return res.data;
+  } catch (error) {
+    console.error("Top books error:", error);
+    return [];
+  }
 };

@@ -156,3 +156,4 @@ def get_issued_books():
     conn.close()
 
     return jsonify(data)
+

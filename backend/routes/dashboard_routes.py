@@ -34,3 +34,60 @@ def get_dashboard_stats():
         "issued_books": issued_books,
         "returned_books": returned_books
     })
+
+
+@dashboard_routes.route("/recent-activity", methods=["GET"])
+def recent_activity():
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    query = """
+    SELECT 
+        users.name AS user,
+        books.title AS book,
+        issue_date,
+        return_date,
+        returned
+    FROM issued_books
+    JOIN users ON users.id = issued_books.user_id
+    JOIN books ON books.id = issued_books.book_id
+    ORDER BY issue_date DESC
+    LIMIT 5
+    """
+
+    cursor.execute(query)
+
+    data = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(data)
+
+
+@dashboard_routes.route("/top-books", methods=["GET"])
+def top_books():
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    query = """
+    SELECT 
+        books.title,
+        COUNT(issued_books.book_id) AS borrow_count
+    FROM issued_books
+    JOIN books ON books.id = issued_books.book_id
+    GROUP BY issued_books.book_id
+    ORDER BY borrow_count DESC
+    LIMIT 5
+    """
+
+    cursor.execute(query)
+
+    data = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(data)
