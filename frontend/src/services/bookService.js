@@ -17,16 +17,34 @@ export const getBooks = async () => {
 };
 
 export const addBook = async (bookData) => {
-  try{
+  try {
 
-  const res = await API.post("/books",bookData);
+    const res = await API.post("/books", bookData);
 
-  return res.data;
+    return res.data;
 
-  }catch(error){
+  } catch (error) {
 
-  console.error("Error adding book:",error);
+    console.error("Error adding book:", error);
 
   }
 
+};
+
+export const deleteBook = async (id) => {
+  try {
+    const res = await API.delete(`/books/${id}`);
+    return res.data;
+  } catch (error) {
+    console.error("Error deleting book:", error);
+  }
+};
+
+export const updateBook = async (id, data) => {
+  try {
+    const res = await API.put(`/books/${id}`, data);
+    return res.data;
+  } catch (error) {
+    console.error("Error updating book:", error);
+  }
 };
