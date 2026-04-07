@@ -111,6 +111,7 @@ function AssignBookPage() {
 
                         <input
                             type="date"
+                            min={new Date().toISOString().split("T")[0]}
                             value={issueDate}
                             onChange={(e) => setIssueDate(e.target.value)}
                             className="w-full p-3 border rounded-lg mt-1 focus:ring-2 focus:ring-teal-500"
@@ -128,6 +129,7 @@ function AssignBookPage() {
 
                         <input
                             type="date"
+                            min={issueDate || new Date().toISOString().split("T")[0]}
                             value={dueDate}
                             onChange={(e) => setDueDate(e.target.value)}
                             className="w-full p-3 border rounded-lg mt-1 focus:ring-2 focus:ring-teal-500"
