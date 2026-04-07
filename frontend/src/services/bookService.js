@@ -57,3 +57,12 @@ export const assignBook = async (data) => {
     console.error("Error assigning book:", error);
   }
 };
+
+export const returnBook = async (id) => {
+try{
+const res = await API.put(`/return-book/${id}`);
+return res.data;
+}catch(error){
+console.error("Error returning book:",error);
+}
+};

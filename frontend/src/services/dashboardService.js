@@ -1,6 +1,14 @@
 import API from "../utils/api";
 
+const defaultStats = {
+  total_books: 0,
+  total_users: 0,
+  issued_books: 0,
+  returned_books: 0
+};
+
 export const getDashboardStats = async () => {
+
   try {
 
     const res = await API.get("/dashboard");
@@ -9,22 +17,10 @@ export const getDashboardStats = async () => {
 
   } catch (error) {
 
-    if (error.response) {
-      console.error("Server Error:", error.response.data);
-    } 
-    else if (error.request) {
-      console.error("Network Error:", error.request);
-    } 
-    else {
-      console.error("Error:", error.message);
-    }
+    console.error("Dashboard API Error:", error);
 
-    return {
-      total_books: 0,
-      total_users: 0,
-      issued_books: 0,
-      returned_books: 0
-    };
+    return defaultStats;
 
   }
+
 };

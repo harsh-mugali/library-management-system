@@ -37,6 +37,13 @@ function Sidebar({ setActivePage }) {
                 </li>
 
                 <li
+                    onClick={() => setActivePage("returnBook")}
+                    className="cursor-pointer hover:bg-teal-500 p-3 rounded"
+                >
+                    Return Book
+                </li>
+
+                <li
                     onClick={() => setActivePage("users")}
                     className="cursor-pointer hover:bg-teal-500 p-3 rounded"
                 >

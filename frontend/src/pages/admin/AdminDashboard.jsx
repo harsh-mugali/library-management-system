@@ -6,6 +6,7 @@ import { getDashboardStats } from "../../services/dashboardService";
 import AddBookPage from "./AddBookPage";
 import BooksPage from "./BooksPage";
 import AssignBookPage from "./AssignBookPage";
+import ReturnBookPage from "./ReturnBookPage";
 
 function AdminDashboard() {
 
@@ -22,6 +23,8 @@ function AdminDashboard() {
 
   useEffect(() => {
     loadDashboard();
+    const interval = setInterval(loadDashboard, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const loadDashboard = async () => {
@@ -78,6 +81,10 @@ function AdminDashboard() {
         {/* Assign Book Page */}
 
         {activePage === "assignBook" && <AssignBookPage />}
+
+        {/* Return Book Page */}
+
+        {activePage === "returnBook" && <ReturnBookPage />}
 
       </div>
 

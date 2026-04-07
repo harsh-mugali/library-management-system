@@ -128,3 +128,31 @@ def return_book(id):
     conn.close()
 
     return jsonify({"message":"Book returned successfully"})
+
+@book_routes.route("/issued-books", methods=["GET"])
+def get_issued_books():
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    query = """
+    SELECT
+        issued_books.id,
+        books.title,
+        users.name AS user,
+        issue_date,
+        due_date
+    FROM issued_books
+    JOIN books ON books.id = issued_books.book_id
+    JOIN users ON users.id = issued_books.user_id
+    WHERE returned = FALSE
+    """
+
+    cursor.execute(query)
+
+    data = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(data)
