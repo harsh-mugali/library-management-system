@@ -2,7 +2,9 @@ from flask import Flask
 from flask_cors import CORS
 from routes.book_routes import book_routes
 from routes.auth_routes import auth_routes
+from routes.dashboard_routes import dashboard_routes
 from flask_jwt_extended import JWTManager
+
 
 app = Flask(__name__)
 
@@ -14,6 +16,7 @@ jwt = JWTManager(app)
 
 app.register_blueprint(book_routes)
 app.register_blueprint(auth_routes)
+app.register_blueprint(dashboard_routes)
 
 @app.route("/")
 def home():
