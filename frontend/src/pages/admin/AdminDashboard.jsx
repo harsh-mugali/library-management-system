@@ -11,6 +11,7 @@ import RecentActivity from "../../components/dashboard/RecentActivity";
 import { getRecentActivity } from "../../services/dashboardService";
 import TopBooks from "../../components/dashboard/TopBooks";
 import { getTopBooks } from "../../services/dashboardService";
+import UsersPage from "./UsersPage";
 
 function AdminDashboard() {
 
@@ -101,6 +102,10 @@ function AdminDashboard() {
         {/* Return Book Page */}
 
         {activePage === "returnBook" && <ReturnBookPage />}
+
+        {/* Users Page */}
+
+        {activePage === "users" && <UsersPage />}
 
       </div>
 
