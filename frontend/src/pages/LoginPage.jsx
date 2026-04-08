@@ -22,6 +22,7 @@ function LoginPage() {
             localStorage.setItem("role", res.data.role);
             localStorage.setItem("userId",res.data.user.id);
             localStorage.setItem("userName",res.data.user.name);
+            localStorage.setItem("userEmail",res.data.user.email);
 
             toast.success("Login successful!");
 

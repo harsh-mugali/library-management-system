@@ -5,13 +5,17 @@ import AvailableBooks from "./AvailableBooks";
 import MyBorrowedBooks from "./MyBorrowedBooks";
 import OverdueBooks from "./OverdueBooks";
 import BorrowHistory from "./BorrowHistory";
+import UserProfile from "../../components/layout/UserProfile";
 
 function UserDashboard() {
-  const [activePage,setActivePage]=useState("dashboard");
+  const [activePage, setActivePage] = useState("dashboard");
   return (
     <div className="flex">
       <UserSidebar setActivePage={setActivePage} />
       <div className="flex-1 p-8">
+        <div className="flex justify-end mb-6">
+          <UserProfile />
+        </div>
         {activePage === "dashboard" && <DashboardHome />}
         {activePage === "available" && <AvailableBooks />}
         {activePage === "borrowed" && <MyBorrowedBooks />}
