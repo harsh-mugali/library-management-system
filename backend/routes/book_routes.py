@@ -175,3 +175,52 @@ def books_by_category():
     cursor.close()
     conn.close()
     return jsonify(categories)
+
+@book_routes.route("/overdue-books",methods=["GET"])
+def overdue_books():
+    conn=get_db_connection()
+    cursor=conn.cursor(dictionary=True)
+    query="""
+    SELECT
+        issued_books.id,
+        books.title,
+        users.name AS user,
+        issued_books.due_date,
+        DATEDIFF(CURDATE(),issued_books.due_date) AS overdue_days
+    FROM issued_books
+    JOIN books ON books.id=issued_books.book_id
+    JOIN users ON users.id=issued_books.user_id
+    WHERE issued_books.returned=FALSE
+    AND issued_books.due_date < CURDATE()
+    """
+    cursor.execute(query)
+    data=cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(data)
+
+@book_routes.route("/apply-fine/<int:id>",methods=["POST"])
+def apply_fine(id):
+    conn=get_db_connection()
+    cursor=conn.cursor()
+    cursor.execute("SELECT due_date FROM issued_books WHERE id=%s",(id,))
+    record=cursor.fetchone()
+    if not record:
+        return jsonify({"error":"Record not found"}),404
+    overdue_days=(date.today()-record[0]).days
+    fine_amount=overdue_days*10
+    cursor.execute("INSERT INTO fines(issued_id,amount) VALUES(%s,%s)",(id,fine_amount))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"message":"Fine applied","amount":fine_amount})
+
+@book_routes.route("/total-fine",methods=["GET"])
+def total_fine():
+    conn=get_db_connection()
+    cursor=conn.cursor()
+    cursor.execute("SELECT SUM(amount) FROM fines")
+    total=cursor.fetchone()[0] or 0
+    cursor.close()
+    conn.close()
+    return jsonify({"total_fine":total})

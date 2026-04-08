@@ -61,6 +61,9 @@ function Sidebar({ setActivePage }) {
                     Users
                 </li>
 
+                <li onClick={()=>setActivePage("overdue")} 
+                className="hover:bg-teal-500 p-3 rounded cursor-pointer">Overdue Books</li>
+
             </ul>
 
         </div>

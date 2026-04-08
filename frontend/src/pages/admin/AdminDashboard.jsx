@@ -14,6 +14,7 @@ import { getTopBooks } from "../../services/dashboardService";
 import UsersPage from "./UsersPage";
 import AdminProfile from "../../components/layout/AdminProfile";
 import CategoryPage from "./CategoryPage";
+import OverduePage from "./OverduePage";
 
 function AdminDashboard() {
 
@@ -113,6 +114,10 @@ function AdminDashboard() {
         {/* category page */}
 
         {activePage === "category" && <CategoryPage/>}
+
+        {/* Overdue Books Page */}
+
+        {activePage === "overdue" && <OverduePage />}
 
       </div>
 
