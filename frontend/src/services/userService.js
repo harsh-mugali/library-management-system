@@ -85,3 +85,18 @@ export const getBorrowHistory = async (userId) => {
         return [];
     }
 };
+
+export const getUserDashboard = async (userId) => {
+    try {
+        const res = await API.get(`/user-dashboard/${userId}`);
+        return res.data;
+    } catch (error) {
+        console.error(error);
+        return {
+            total_books: 0,
+            borrowed: 0,
+            history: 0,
+            overdue: 0
+        };
+    }
+};

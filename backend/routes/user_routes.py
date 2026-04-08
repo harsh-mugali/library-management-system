@@ -190,3 +190,43 @@ def pay_fine(issued_id):
     conn.close()
 
     return jsonify({"message": "Fine paid successfully"})
+
+@user_routes.route("/user-dashboard/<int:user_id>",methods=["GET"])
+def user_dashboard(user_id):
+
+    conn=get_db_connection()
+    cursor=conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT COUNT(*) AS total_books FROM books")
+    total_books=cursor.fetchone()["total_books"]
+
+    cursor.execute("""
+    SELECT COUNT(*) AS borrowed
+    FROM issued_books
+    WHERE user_id=%s AND returned=FALSE
+    """,(user_id,))
+    borrowed=cursor.fetchone()["borrowed"]
+
+    cursor.execute("""
+    SELECT COUNT(*) AS history
+    FROM issued_books
+    WHERE user_id=%s
+    """,(user_id,))
+    history=cursor.fetchone()["history"]
+
+    cursor.execute("""
+    SELECT COUNT(*) AS overdue
+    FROM issued_books
+    WHERE user_id=%s AND returned=FALSE AND due_date<CURDATE()
+    """,(user_id,))
+    overdue=cursor.fetchone()["overdue"]
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({
+    "total_books":total_books,
+    "borrowed":borrowed,
+    "history":history,
+    "overdue":overdue
+    })

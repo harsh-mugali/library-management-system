@@ -9,6 +9,7 @@ function MyBorrowedBooks() {
     useEffect(() => { loadBooks(); }, []);
 
     const loadBooks = async () => {
+        const userId = localStorage.getItem("userId");
         const data = await getMyBooks(userId);
         setBooks(data);
     };

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAvailableBooks, borrowBook } from "../../services/userService";
+import { getAvailableBooks} from "../../services/userService";
 import { toast } from "react-toastify";
 
 function AvailableBooks() {
@@ -11,12 +11,6 @@ function AvailableBooks() {
     const loadBooks = async () => {
         const data = await getAvailableBooks();
         setBooks(data);
-    };
-
-    const handleBorrow = async (bookId) => {
-        await borrowBook({ book_id: bookId, user_id: userId });
-        toast.success("Book borrowed");
-        loadBooks();
     };
 
     return (
