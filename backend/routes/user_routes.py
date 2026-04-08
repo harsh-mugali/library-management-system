@@ -165,6 +165,7 @@ LEFT JOIN fines
 WHERE issued_books.user_id = %s
     AND issued_books.returned = FALSE
     AND issued_books.due_date < CURDATE()
+    AND (fines.paid IS NULL OR fines.paid = FALSE)
     """
 
     cursor.execute(query, (user_id,))
