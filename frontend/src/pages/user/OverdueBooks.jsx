@@ -38,7 +38,7 @@ function OverdueBooks() {
                             <td className="p-3">{book.title}</td>
                             <td className="p-3 text-center">{new Date(book.due_date).toLocaleDateString()}</td>
                             <td className="p-3 text-center text-red-600 font-semibold">{book.overdue_days}</td>
-                            <td className="p-3 text-center">₹{book.fine_amount}</td>
+                            <td className="p-3 text-center font-semibold text-red-600">₹{book.amount}</td>
                             <td className="p-3 text-center">
                                 <button onClick={() => handlePay(book.id)} className="bg-red-500 text-white px-3 py-1 rounded">Pay Fine</button>
                             </td>
