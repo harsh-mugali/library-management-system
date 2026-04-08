@@ -100,3 +100,23 @@ export const getUserDashboard = async (userId) => {
         };
     }
 };
+
+export const getRecentBooks = async (userId) => {
+    try {
+        const res = await API.get(`/recent-books/${userId}`);
+        return res.data;
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+};
+
+export const getDueBooks = async (userId) => {
+    try {
+        const res = await API.get(`/due-books/${userId}`);
+        return res.data;
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+};

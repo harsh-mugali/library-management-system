@@ -230,3 +230,52 @@ def user_dashboard(user_id):
     "history":history,
     "overdue":overdue
     })
+
+
+@user_routes.route("/recent-books/<int:user_id>",methods=["GET"])
+def recent_books(user_id):
+
+    conn=get_db_connection()
+    cursor=conn.cursor(dictionary=True)
+
+    query="""
+    SELECT books.title,issue_date,due_date
+    FROM issued_books
+    JOIN books ON books.id=issued_books.book_id
+    WHERE issued_books.user_id=%s
+    ORDER BY issue_date DESC
+    LIMIT 5
+    """
+
+    cursor.execute(query,(user_id,))
+    books=cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(books)
+
+
+@user_routes.route("/due-books/<int:user_id>",methods=["GET"])
+def due_books(user_id):
+
+    conn=get_db_connection()
+    cursor=conn.cursor(dictionary=True)
+
+    query="""
+    SELECT books.title,due_date
+    FROM issued_books
+    JOIN books ON books.id=issued_books.book_id
+    WHERE issued_books.user_id=%s
+    AND issued_books.returned=FALSE
+    ORDER BY due_date ASC
+    LIMIT 5
+    """
+
+    cursor.execute(query,(user_id,))
+    books=cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(books)
