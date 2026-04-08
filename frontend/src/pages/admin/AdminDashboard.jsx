@@ -12,6 +12,7 @@ import { getRecentActivity } from "../../services/dashboardService";
 import TopBooks from "../../components/dashboard/TopBooks";
 import { getTopBooks } from "../../services/dashboardService";
 import UsersPage from "./UsersPage";
+import AdminProfile from "../../components/layout/AdminProfile";
 
 function AdminDashboard() {
 
@@ -65,9 +66,10 @@ function AdminDashboard() {
 
           <>
 
-            <h1 className="text-3xl font-bold mb-8">
-              Dashboard
-            </h1>
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-3xl font-bold">Dashboard</h1>
+              <AdminProfile />
+            </div>
 
             <StatsCards stats={stats} />
 

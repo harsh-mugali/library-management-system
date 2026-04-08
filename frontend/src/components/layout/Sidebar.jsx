@@ -1,5 +1,13 @@
-function Sidebar({ setActivePage }) {
+import {useNavigate} from "react-router-dom";
+import {FiLogOut} from "react-icons/fi";
 
+function Sidebar({ setActivePage }) {
+const navigate=useNavigate();
+const handleLogout=()=>{
+localStorage.removeItem("token");
+navigate("/");
+};
+    
     return (
 
         <div className="w-64 bg-gradient-to-b from-teal-600 to-teal-800 text-white p-6">
