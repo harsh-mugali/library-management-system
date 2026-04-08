@@ -224,3 +224,50 @@ def total_fine():
     cursor.close()
     conn.close()
     return jsonify({"total_fine":total})
+
+@book_routes.route("/available-books", methods=["GET"])
+def available_books():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    query = """
+    SELECT id,title,author,category,total_copies
+    FROM books
+    WHERE total_copies > 0
+    """
+
+    cursor.execute(query)
+    books = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(books)
+
+@book_routes.route("/borrow-book", methods=["POST"])
+def borrow_book():
+    data = request.json
+    book_id = data["book_id"]
+    user_id = data["user_id"]
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO issued_books(book_id,user_id,issue_date,due_date)
+        VALUES(%s,%s,CURDATE(),DATE_ADD(CURDATE(),INTERVAL 7 DAY))
+    """, (book_id, user_id))
+
+    cursor.execute("""
+        UPDATE books
+        SET total_copies = total_copies - 1
+        WHERE id = %s
+    """, (book_id,))
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({"message": "Book borrowed successfully"})
+

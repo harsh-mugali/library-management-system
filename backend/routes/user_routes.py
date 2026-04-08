@@ -43,3 +43,150 @@ def delete_user(id):
     cursor.close()
     conn.close()
     return jsonify({"message":"User deleted successfully"})
+
+@user_routes.route("/available-books", methods=["GET"])
+def available_books():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    query = """
+    SELECT id, title, author, category, total_copies
+    FROM books
+    WHERE total_copies > 0
+    """
+
+    cursor.execute(query)
+    books = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(books)
+
+
+@user_routes.route("/borrow-book", methods=["POST"])
+def borrow_book():
+
+    data = request.json
+
+    book_id = data["book_id"]
+    user_id = data["user_id"]
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO issued_books (book_id, user_id, issue_date, due_date)
+        VALUES (%s, %s, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 7 DAY))
+    """, (book_id, user_id))
+
+    cursor.execute("""
+        UPDATE books
+        SET total_copies = total_copies - 1
+        WHERE id = %s
+    """, (book_id,))
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({"message": "Book borrowed successfully"})
+
+
+@user_routes.route("/my-books/<int:user_id>", methods=["GET"])
+def my_books(user_id):
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    query = """
+    SELECT
+        issued_books.id,
+        books.title,
+        issue_date,
+        due_date
+    FROM issued_books
+    JOIN books ON books.id = issued_books.book_id
+    WHERE user_id = %s AND returned = FALSE
+    """
+
+    cursor.execute(query, (user_id,))
+    books = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(books)
+
+
+@user_routes.route("/borrow-history/<int:user_id>", methods=["GET"])
+def borrow_history(user_id):
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    query = """
+    SELECT
+        books.title,
+        issue_date,
+        due_date,
+        return_date
+    FROM issued_books
+    JOIN books ON books.id = issued_books.book_id
+    WHERE user_id = %s
+    """
+
+    cursor.execute(query, (user_id,))
+    history = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(history)
+
+@user_routes.route("/my-overdue/<int:user_id>", methods=["GET"])
+def my_overdue(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    query = """
+    SELECT
+        issued_books.id,
+        books.title,
+        issued_books.due_date,
+        DATEDIFF(CURDATE(), issued_books.due_date) AS overdue_days,
+        COALESCE(fines.amount, 0) AS fine_amount
+    FROM issued_books
+    JOIN books ON books.id = issued_books.book_id
+    LEFT JOIN fines ON fines.issued_id = issued_books.id
+    WHERE issued_books.user_id = %s
+    AND issued_books.returned = FALSE
+    AND issued_books.due_date < CURDATE()
+    """
+
+    cursor.execute(query, (user_id,))
+    data = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(data)
+
+@user_routes.route("/pay-fine/<int:issued_id>", methods=["PUT"])
+def pay_fine(issued_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE fines
+        SET paid = TRUE
+        WHERE issued_id = %s
+    """, (issued_id,))
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({"message": "Fine paid successfully"})
