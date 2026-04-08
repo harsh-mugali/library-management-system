@@ -61,8 +61,8 @@ function ReturnBookPage() {
 
                             <td className="p-3">{book.title}</td>
                             <td className="p-3">{book.user}</td>
-                            <td className="p-3 text-center">{book.issue_date}</td>
-                            <td className="p-3 text-center">{book.due_date}</td>
+                            <td className="p-3 text-center">{new Date(book.issue_date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</td>
+                            <td className="p-3 text-center">{new Date(book.due_date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</td>
 
                             <td className="p-3 text-center">
 

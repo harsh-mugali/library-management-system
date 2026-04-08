@@ -13,6 +13,7 @@ import TopBooks from "../../components/dashboard/TopBooks";
 import { getTopBooks } from "../../services/dashboardService";
 import UsersPage from "./UsersPage";
 import AdminProfile from "../../components/layout/AdminProfile";
+import CategoryPage from "./CategoryPage";
 
 function AdminDashboard() {
 
@@ -108,6 +109,10 @@ function AdminDashboard() {
         {/* Users Page */}
 
         {activePage === "users" && <UsersPage />}
+
+        {/* category page */}
+
+        {activePage === "category" && <CategoryPage/>}
 
       </div>
 

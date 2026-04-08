@@ -59,10 +59,20 @@ export const assignBook = async (data) => {
 };
 
 export const returnBook = async (id) => {
-try{
-const res = await API.put(`/return-book/${id}`);
-return res.data;
-}catch(error){
-console.error("Error returning book:",error);
-}
+  try {
+    const res = await API.put(`/return-book/${id}`);
+    return res.data;
+  } catch (error) {
+    console.error("Error returning book:", error);
+  }
+};
+
+export const getBooksByCategory = async () => {
+  try {
+    const res = await API.get("/books-by-category");
+    return res.data;
+  } catch (error) {
+    console.error("Category fetch error:", error);
+    return {};
+  }
 };

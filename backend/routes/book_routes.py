@@ -157,3 +157,21 @@ def get_issued_books():
 
     return jsonify(data)
 
+@book_routes.route("/books-by-category",methods=["GET"])
+def books_by_category():
+    conn=get_db_connection()
+    cursor=conn.cursor(dictionary=True)
+    query="""
+    SELECT category,title,author FROM books ORDER BY category
+    """
+    cursor.execute(query)
+    rows=cursor.fetchall()
+    categories={}
+    for row in rows:
+        cat=row["category"]
+        if cat not in categories:
+            categories[cat]=[]
+        categories[cat].append({"title":row["title"],"author":row["author"]})
+    cursor.close()
+    conn.close()
+    return jsonify(categories)

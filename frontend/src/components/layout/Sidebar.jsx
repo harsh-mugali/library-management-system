@@ -1,13 +1,13 @@
-import {useNavigate} from "react-router-dom";
-import {FiLogOut} from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import { FiLogOut } from "react-icons/fi";
 
 function Sidebar({ setActivePage }) {
-const navigate=useNavigate();
-const handleLogout=()=>{
-localStorage.removeItem("token");
-navigate("/");
-};
-    
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/");
+    };
+
     return (
 
         <div className="w-64 bg-gradient-to-b from-teal-600 to-teal-800 text-white p-6">
@@ -50,6 +50,9 @@ navigate("/");
                 >
                     Return Book
                 </li>
+
+                <li onClick={() => setActivePage("category")} 
+                className="cursor-pointer hover:bg-teal-500 p-3 rounded">Category</li>
 
                 <li
                     onClick={() => setActivePage("users")}
