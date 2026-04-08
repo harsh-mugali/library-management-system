@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { getBorrowHistory } from "../../services/userService";
 
+const formatDate = (date) => {
+    return new Date(date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+};
+
 function BorrowHistory() {
     const [history, setHistory] = useState([]);
     const userId = localStorage.getItem("userId");
@@ -28,9 +32,9 @@ function BorrowHistory() {
                     {history.map((book, index) => (
                         <tr key={index} className="border-b">
                             <td className="p-3">{book.title}</td>
-                            <td className="p-3 text-center">{new Date(book.issue_date).toLocaleDateString()}</td>
-                            <td className="p-3 text-center">{new Date(book.due_date).toLocaleDateString()}</td>
-                            <td className="p-3 text-center">{book.return_date ? new Date(book.return_date).toLocaleDateString() : "Not Returned"}</td>
+                            <td className="p-3 text-center">{formatDate(book.issue_date)}</td>
+                            <td className="p-3 text-center">{formatDate(book.due_date)}</td>
+                            <td className="p-3 text-center">{book.return_date ? formatDate(book.return_date) : "Not Returned"}</td>
                         </tr>
                     ))}
                 </tbody>

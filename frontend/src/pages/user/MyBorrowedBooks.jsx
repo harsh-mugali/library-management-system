@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { getMyBooks } from "../../services/userService";
 
+const formatDate = (date) => {
+    return new Date(date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+};
+
 function MyBorrowedBooks() {
     const [books, setBooks] = useState([]);
     const userId = localStorage.getItem("userId");
@@ -29,8 +33,8 @@ function MyBorrowedBooks() {
                     {books.map(book => (
                         <tr key={book.id} className="border-b">
                             <td className="p-3">{book.title}</td>
-                            <td className="p-3 text-center">{new Date(book.issue_date).toLocaleDateString()}</td>
-                            <td className="p-3 text-center">{new Date(book.due_date).toLocaleDateString()}</td>
+                            <td className="p-3 text-center">{formatDate(book.issue_date)}</td>
+                            <td className="p-3 text-center">{formatDate(book.due_date)}</td>
                         </tr>
                     ))}
                 </tbody>
