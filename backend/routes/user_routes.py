@@ -151,18 +151,21 @@ def my_overdue(user_id):
     cursor = conn.cursor(dictionary=True)
 
     query = """
-    SELECT
-        issued_books.id,
-        books.title,
-        issued_books.due_date,
-        DATEDIFF(CURDATE(), issued_books.due_date) AS overdue_days,
-        COALESCE(fines.amount, 0) AS fine_amount
-    FROM issued_books
-    JOIN books ON books.id = issued_books.book_id
-    LEFT JOIN fines ON fines.issued_id = issued_books.id
-    WHERE issued_books.user_id = %s
+SELECT
+    issued_books.id,
+    books.title,
+    issued_books.due_date,
+    DATEDIFF(CURDATE(), issued_books.due_date) AS overdue_days,
+    fines.amount
+FROM issued_books
+JOIN books
+    ON books.id = issued_books.book_id
+LEFT JOIN fines
+    ON fines.issued_id = issued_books.id
+WHERE issued_books.user_id = %s
     AND issued_books.returned = FALSE
     AND issued_books.due_date < CURDATE()
+    AND (fines.paid IS NULL OR fines.paid = FALSE)
     """
 
     cursor.execute(query, (user_id,))

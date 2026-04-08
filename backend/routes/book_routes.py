@@ -182,18 +182,23 @@ def overdue_books():
     conn=get_db_connection()
     cursor=conn.cursor(dictionary=True)
     query="""
-    SELECT
-        issued_books.id,
-        books.title,
-        users.name AS user,
-        issued_books.due_date,
-        DATEDIFF(CURDATE(),issued_books.due_date) AS overdue_days
-    FROM issued_books
-    JOIN books ON books.id=issued_books.book_id
-    JOIN users ON users.id=issued_books.user_id
-    WHERE issued_books.returned=FALSE
+SELECT
+    issued_books.id,
+    books.title,
+    users.name AS user,
+    issued_books.due_date,
+    DATEDIFF(CURDATE(), issued_books.due_date) AS overdue_days
+FROM issued_books
+JOIN books
+    ON books.id = issued_books.book_id
+JOIN users
+    ON users.id = issued_books.user_id
+LEFT JOIN fines
+    ON fines.issued_id = issued_books.id
+WHERE issued_books.returned = FALSE
     AND issued_books.due_date < CURDATE()
-    """
+    AND (fines.paid IS NULL OR fines.paid = FALSE)
+"""
     cursor.execute(query)
     data=cursor.fetchall()
     cursor.close()
