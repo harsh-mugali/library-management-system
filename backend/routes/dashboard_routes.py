@@ -42,19 +42,20 @@ def recent_activity():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    query = """
-    SELECT 
-        users.name AS user,
-        books.title AS book,
-        issue_date,
-        return_date,
-        returned
-    FROM issued_books
-    JOIN users ON users.id = issued_books.user_id
-    JOIN books ON books.id = issued_books.book_id
-    ORDER BY issue_date DESC
-    LIMIT 5
-    """
+    query="""
+SELECT 
+users.name AS user,
+books.title AS book,
+CASE
+WHEN issued_books.returned=TRUE THEN 'returned'
+ELSE 'issued'
+END AS action,
+COALESCE(return_date,issue_date) AS activity_date
+FROM issued_books
+JOIN users ON users.id=issued_books.user_id
+JOIN books ON books.id=issued_books.book_id
+ORDER BY activity_date DESC
+"""
 
     cursor.execute(query)
 

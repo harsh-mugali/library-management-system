@@ -2,7 +2,7 @@ function RecentActivity({ activities }) {
 
     return (
 
-        <div className="bg-white p-6 rounded-xl shadow">
+        <div className="bg-white p-6 rounded-xl shadow h-72 overflow-y-auto">
 
             <h2 className="text-xl font-semibold mb-4">
                 Recent Activity
@@ -10,32 +10,17 @@ function RecentActivity({ activities }) {
 
             <ul className="space-y-2 text-gray-600">
 
-                {activities.map((item, index) => (
-
+                {activities.map((a, index) => (
                     <li key={index}>
-
-                        {item.returned ? (
-
-                            <span>
-                                <strong>{item.user}</strong> returned <strong>{item.book}</strong>
-                            </span>
-
-                        ) : (
-
-                            <span>
-                                <strong>{item.user}</strong> issued <strong>{item.book}</strong>
-                            </span>
-
-                        )}
-
+                        {a.action === "returned"
+                            ? `Returned ${a.book}`
+                            : `${a.user} issued ${a.book}`}
                     </li>
-
                 ))}
 
             </ul>
 
         </div>
-
     );
 
 }
