@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from models.book_model import get_all_books, add_book, update_book, delete_book
 from flask import request, jsonify
 from utils.db import get_db_connection
+from datetime import date
 
 book_routes = Blueprint("book_routes", __name__)
 
@@ -201,25 +202,37 @@ def overdue_books():
 
 @book_routes.route("/apply-fine/<int:id>",methods=["POST"])
 def apply_fine(id):
+
     conn=get_db_connection()
     cursor=conn.cursor()
+
     cursor.execute("SELECT due_date FROM issued_books WHERE id=%s",(id,))
     record=cursor.fetchone()
+
     if not record:
         return jsonify({"error":"Record not found"}),404
+
     overdue_days=(date.today()-record[0]).days
+
+    if overdue_days<=0:
+        return jsonify({"message":"No fine required"}),200
+
     fine_amount=overdue_days*10
+
     cursor.execute("INSERT INTO fines(issued_id,amount) VALUES(%s,%s)",(id,fine_amount))
+
     conn.commit()
+
     cursor.close()
     conn.close()
+
     return jsonify({"message":"Fine applied","amount":fine_amount})
 
 @book_routes.route("/total-fine",methods=["GET"])
 def total_fine():
     conn=get_db_connection()
     cursor=conn.cursor()
-    cursor.execute("SELECT SUM(amount) FROM fines")
+    cursor.execute("SELECT SUM(amount) FROM fines WHERE paid=TRUE")
     total=cursor.fetchone()[0] or 0
     cursor.close()
     conn.close()
