@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAvailableBooks} from "../../services/userService";
+import { getAvailableBooks } from "../../services/userService";
 import { toast } from "react-toastify";
 
 function AvailableBooks() {
@@ -14,28 +14,40 @@ function AvailableBooks() {
     };
 
     return (
-        <div>
-            <h1 className="text-3xl font-bold mb-6">Available Books</h1>
-            <table className="w-full bg-white shadow rounded">
-                <thead className="bg-gray-200">
-                    <tr>
-                        <th className="p-3 text-left">Title</th>
-                        <th className="p-3 text-left">Author</th>
-                        <th className="p-3 text-left">Category</th>
-                        <th className="p-3 text-center">Copies</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {books.map((book) => (
-                        <tr key={book.id} className="border-b">
-                            <td className="p-3">{book.title}</td>
-                            <td className="p-3">{book.author}</td>
-                            <td className="p-3">{book.category}</td>
-                            <td className="p-3 text-center">{book.total_copies}</td>
+        <div className="bg-white rounded-xl shadow">
+
+            <h2 className="text-xl font-semibold p-6 border-b sticky top-0 bg-white z-10">
+                Available Books
+            </h2>
+
+            <div className="h-80 overflow-y-auto">
+
+                <table className="w-full text-left">
+
+                    <thead className="bg-gray-100 sticky top-0">
+                        <tr>
+                            <th className="p-3">Title</th>
+                            <th className="p-3 text-center">Author</th>
+                            <th className="p-3 text-center">Category</th>
+                            <th className="p-3 text-center">Copies</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody>
+                        {books.map(book => (
+                            <tr key={book.id} className="border-b">
+                                <td className="p-3">{book.title}</td>
+                                <td className="p-3 text-center">{book.author}</td>
+                                <td className="p-3 text-center">{book.category}</td>
+                                <td className="p-3 text-center">{book.total_copies}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+
+                </table>
+
+            </div>
+
         </div>
     );
 }

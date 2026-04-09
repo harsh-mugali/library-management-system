@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getUserDashboard } from "../../services/userService";
-import {getRecentBooks,getDueBooks} from "../../services/userService";
+import { getRecentBooks, getDueBooks } from "../../services/userService";
 
 const formatDate = (date) => {
     return new Date(date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
@@ -64,65 +64,69 @@ function DashboardHome() {
 
             <div className="grid grid-cols-2 gap-6 mt-10">
 
-                <div className="bg-white shadow rounded-lg p-6">
+                <div className="bg-white rounded-xl shadow">
 
-                    <h2 className="text-xl font-semibold mb-4">
+                    <h2 className="text-xl font-semibold p-6 border-b sticky top-0 bg-white z-10">
                         Recently Borrowed Books
                     </h2>
 
-                    <table className="w-full">
+                    <div className="h-72 overflow-y-auto">
 
-                        <thead>
-                            <tr className="text-left border-b">
-                                <th className="p-2">Book</th>
-                                <th className="p-2">Issue Date</th>
-                                <th className="p-2">Due Date</th>
-                            </tr>
-                        </thead>
+                        <table className="w-full text-left">
 
-                        <tbody>
-
-                            {recentBooks.map((book, index) => (
-                                <tr key={index} className="border-b">
-                                    <td className="p-2">{book.title}</td>
-                                    <td className="p-2">{formatDate(book.issue_date)}</td>
-                                    <td className="p-2">{formatDate(book.due_date)}</td>
+                            <thead className="bg-gray-100 sticky top-0">
+                                <tr>
+                                    <th className="p-3">Book</th>
+                                    <th className="p-3">Issue Date</th>
+                                    <th className="p-3">Due Date</th>
                                 </tr>
-                            ))}
+                            </thead>
 
-                        </tbody>
+                            <tbody>
+                                {recentBooks.map((book, index) => (
+                                    <tr key={index} className="border-b">
+                                        <td className="p-3">{book.title}</td>
+                                        <td className="p-3">{formatDate(book.issue_date)}</td>
+                                        <td className="p-3">{formatDate(book.due_date)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
 
-                    </table>
+                        </table>
+
+                    </div>
 
                 </div>
 
-                <div className="bg-white shadow rounded-lg p-6">
+                <div className="bg-white rounded-xl shadow">
 
-                    <h2 className="text-xl font-semibold mb-4">
+                    <h2 className="text-xl font-semibold p-6 border-b sticky top-0 bg-white z-10">
                         Upcoming Due Books
                     </h2>
 
-                    <table className="w-full">
+                    <div className="h-72 overflow-y-auto">
 
-                        <thead>
-                            <tr className="text-left border-b">
-                                <th className="p-2">Book</th>
-                                <th className="p-2">Due Date</th>
-                            </tr>
-                        </thead>
+                        <table className="w-full text-left">
 
-                        <tbody>
-
-                            {dueBooks.map((book, index) => (
-                                <tr key={index} className="border-b">
-                                    <td className="p-2">{book.title}</td>
-                                    <td className="p-2">{formatDate(book.due_date)}</td>
+                            <thead className="bg-gray-100 sticky top-0">
+                                <tr>
+                                    <th className="p-3">Book</th>
+                                    <th className="p-3">Due Date</th>
                                 </tr>
-                            ))}
+                            </thead>
 
-                        </tbody>
+                            <tbody>
+                                {dueBooks.map((book, index) => (
+                                    <tr key={index} className="border-b">
+                                        <td className="p-3">{book.title}</td>
+                                        <td className="p-3">{formatDate(book.due_date)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
 
-                    </table>
+                        </table>
+
+                    </div>
 
                 </div>
 

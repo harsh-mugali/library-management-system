@@ -17,28 +17,36 @@ function BorrowHistory() {
     };
 
     return (
-        <div>
-            <h1 className="text-3xl font-bold mb-6">Borrow History</h1>
-            <table className="w-full bg-white shadow rounded">
-                <thead className="bg-gray-200">
-                    <tr>
-                        <th className="p-3 text-left">Book</th>
-                        <th className="p-3 text-center">Issue Date</th>
-                        <th className="p-3 text-center">Due Date</th>
-                        <th className="p-3 text-center">Return Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {history.map((book, index) => (
-                        <tr key={index} className="border-b">
-                            <td className="p-3">{book.title}</td>
-                            <td className="p-3 text-center">{formatDate(book.issue_date)}</td>
-                            <td className="p-3 text-center">{formatDate(book.due_date)}</td>
-                            <td className="p-3 text-center">{book.return_date ? formatDate(book.return_date) : "Not Returned"}</td>
+        <div className="bg-white rounded-xl shadow">
+
+            <h2 className="text-xl font-semibold p-6 border-b sticky top-0 bg-white z-10">
+                Borrow History
+            </h2>
+
+            <div className="h-72 overflow-y-auto">
+
+                <table className="w-full text-left">
+
+                    <thead className="bg-gray-100 sticky top-0">
+                        <tr>
+                            <th className="p-3">Book</th>
+                            <th className="p-3 text-center">Issue Date</th>
+                            <th className="p-3 text-center">Due Date</th>
+                            <th className="p-3 text-center">Return Date</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {history.map((book, index) => (
+                            <tr key={index} className="border-b">
+                                <td className="p-3">{book.title}</td>
+                                <td className="p-3 text-center">{formatDate(book.issue_date)}</td>
+                                <td className="p-3 text-center">{formatDate(book.due_date)}</td>
+                                <td className="p-3 text-center">{book.return_date ? formatDate(book.return_date) : "Not Returned"}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }
