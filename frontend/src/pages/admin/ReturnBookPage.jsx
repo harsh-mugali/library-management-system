@@ -31,58 +31,57 @@ function ReturnBookPage() {
 
     return (
 
-        <div>
+        <div className="bg-white rounded-xl shadow">
 
-            <h1 className="text-3xl font-bold mb-6">
+            <h2 className="text-xl font-semibold p-6 border-b sticky top-0 bg-white z-10">
                 Return Book
-            </h1>
+            </h2>
 
-            <table className="w-full bg-white shadow rounded">
+            <div className="h-80 overflow-y-auto">
 
-                <thead className="bg-gray-200">
+                <table className="w-full text-left">
 
-                    <tr>
-
-                        <th className="p-3 text-left">Book</th>
-                        <th className="p-3 text-left">User</th>
-                        <th className="p-3 text-center">Issue Date</th>
-                        <th className="p-3 text-center">Due Date</th>
-                        <th className="p-3 text-center">Action</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    {issuedBooks.map((book) => (
-
-                        <tr key={book.id} className="border-b">
-
-                            <td className="p-3">{book.title}</td>
-                            <td className="p-3">{book.user}</td>
-                            <td className="p-3 text-center">{new Date(book.issue_date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</td>
-                            <td className="p-3 text-center">{new Date(book.due_date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</td>
-
-                            <td className="p-3 text-center">
-
-                                <button
-                                    onClick={() => handleReturn(book.id)}
-                                    className="bg-green-600 text-white px-4 py-1 rounded"
-                                >
-                                    Return
-                                </button>
-
-                            </td>
-
+                    <thead className="bg-gray-100 sticky top-0">
+                        <tr>
+                            <th className="p-3">Book</th>
+                            <th className="p-3 text-center">User</th>
+                            <th className="p-3 text-center">Issue Date</th>
+                            <th className="p-3 text-center">Due Date</th>
+                            <th className="p-3 text-center">Action</th>
                         </tr>
+                    </thead>
 
-                    ))}
+                    <tbody>
 
-                </tbody>
+                        {issuedBooks.map((book) => (
 
-            </table>
+                            <tr key={book.id} className="border-b">
 
+                                <td className="p-3">{book.title}</td>
+                                <td className="p-3 text-center">{book.user}</td>
+                                <td className="p-3 text-center">{new Date(book.issue_date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</td>
+                                <td className="p-3 text-center">{new Date(book.due_date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</td>
+
+                                <td className="p-3 text-center">
+
+                                    <button
+                                        onClick={() => handleReturn(book.id)}
+                                        className="bg-green-600 text-white px-4 py-1 rounded"
+                                    >
+                                        Return
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                        ))}
+
+                    </tbody>
+
+                </table>
+
+            </div>
         </div>
 
     );

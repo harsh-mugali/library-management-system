@@ -15,30 +15,38 @@ function UsersPage() {
         fetchUsers();
     };
     return (
-        <div>
-            <h1 className="text-3xl font-bold mb-6">Users</h1>
-            <table className="w-full bg-white shadow rounded">
-                <thead className="bg-gray-200">
-                    <tr>
-                        <th className="p-3 text-left">Name</th>
-                        <th className="p-3 text-left">Email</th>
-                        <th className="p-3 text-center">Borrowed Books</th>
-                        <th className="p-3 text-center">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((user) => (
-                        <tr key={user.id} className="border-b hover:bg-gray-50">
-                            <td className="p-3">{user.name}</td>
-                            <td className="p-3">{user.email}</td>
-                            <td className="p-3 text-center">{user.borrowed_books}</td>
-                            <td className="p-3 text-center">
-                                <button onClick={() => handleDelete(user.id)} className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
-                            </td>
+        <div className="bg-white rounded-xl shadow">
+
+            <h2 className="text-xl font-semibold p-6 border-b sticky top-0 bg-white z-10">
+                Users
+            </h2>
+
+            <div className="h-80 overflow-y-auto">
+
+                <table className="w-full text-left">
+
+                    <thead className="bg-gray-100 sticky top-0">
+                        <tr>
+                            <th className="p-3">Name</th>
+                            <th className="p-3 text-center">Email</th>
+                            <th className="p-3 text-center">Borrowed Books</th>
+                            <th className="p-3 text-center">Action</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {users.map((user) => (
+                            <tr key={user.id} className="border-b hover:bg-gray-50">
+                                <td className="p-3">{user.name}</td>
+                                <td className="p-3 text-center">{user.email}</td>
+                                <td className="p-3 text-center">{user.borrowed_books}</td>
+                                <td className="p-3 text-center">
+                                    <button onClick={() => handleDelete(user.id)} className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }

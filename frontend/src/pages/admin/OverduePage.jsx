@@ -29,40 +29,47 @@ function OverduePage() {
     };
 
     return (
-        <div>
-            <h1 className="text-3xl font-bold mb-6">Overdue Books</h1>
+        <div className="bg-white rounded-xl shadow">
 
-            <div className="mb-4 text-lg font-semibold">
+            <h2 className="text-xl font-semibold p-6 border-b sticky top-0 bg-white z-10">
+                Overdue Books
+            </h2>
+
+            <div className="mb-4 text-lg font-semibold sticky top-0 bg-gray-100 z-10 p-3 rounded">
                 Total Fine Collected: ₹{totalFine}
             </div>
 
-            <table className="w-full bg-white shadow rounded">
-                <thead className="bg-gray-200">
-                    <tr>
-                        <th className="p-3">Book</th>
-                        <th className="p-3">User</th>
-                        <th className="p-3 text-center">Due Date</th>
-                        <th className="p-3 text-center">Overdue Days</th>
-                        <th className="p-3 text-center">Action</th>
-                    </tr>
-                </thead>
+            <div className="h-80 overflow-y-auto">
 
-                <tbody>
+                <table className="w-full text-left">
 
-                    {books.map(book => (
-                        <tr key={book.id} className="border-b">
-                            <td className="p-3">{book.title}</td>
-                            <td className="p-3">{book.user}</td>
-                            <td className="p-3 text-center">{new Date(book.due_date).toLocaleDateString()}</td>
-                            <td className="p-3 text-center text-red-600 font-semibold">{book.overdue_days}</td>
-                            <td className="p-3 text-center">
-                                <button onClick={() => applyFine(book.id)} className="bg-red-500 text-white px-3 py-1 rounded">Fine</button>
-                            </td>
+                    <thead className="bg-gray-100 sticky top-0">
+                        <tr>
+                            <th className="p-3">Book</th>
+                            <th className="p-3">User</th>
+                            <th className="p-3 text-center">Due Date</th>
+                            <th className="p-3 text-center">Overdue Days</th>
+                            <th className="p-3 text-center">Action</th>
                         </tr>
-                    ))}
+                    </thead>
 
-                </tbody>
-            </table>
+                    <tbody>
+
+                        {books.map(book => (
+                            <tr key={book.id} className="border-b">
+                                <td className="p-3">{book.title}</td>
+                                <td className="p-3">{book.user}</td>
+                                <td className="p-3 text-center">{new Date(book.due_date).toLocaleDateString()}</td>
+                                <td className="p-3 text-center text-red-600 font-semibold">{book.overdue_days}</td>
+                                <td className="p-3 text-center">
+                                    <button onClick={() => applyFine(book.id)} className="bg-red-500 text-white px-3 py-1 rounded">Fine</button>
+                                </td>
+                            </tr>
+                        ))}
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }
