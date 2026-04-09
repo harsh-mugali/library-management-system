@@ -15,6 +15,7 @@ import UsersPage from "./UsersPage";
 import AdminProfile from "../../components/layout/AdminProfile";
 import CategoryPage from "./CategoryPage";
 import OverduePage from "./OverduePage";
+import FineHistoryPage from "./FineHistoryPage";
 
 function AdminDashboard() {
 
@@ -118,6 +119,10 @@ function AdminDashboard() {
         {/* Overdue Books Page */}
 
         {activePage === "overdue" && <OverduePage />}
+
+        {/* Fine History Page */}
+
+        {activePage === "fineHistory" && <FineHistoryPage />}
 
       </div>
 

@@ -178,21 +178,23 @@ WHERE issued_books.user_id = %s
 
 @user_routes.route("/pay-fine/<int:issued_id>", methods=["PUT"])
 def pay_fine(issued_id):
-    conn = get_db_connection()
-    cursor = conn.cursor()
+
+    conn=get_db_connection()
+    cursor=conn.cursor()
 
     cursor.execute("""
-        UPDATE fines
-        SET paid = TRUE
-        WHERE issued_id = %s
-    """, (issued_id,))
+    UPDATE fines
+    SET paid=TRUE,
+        paid_date=CURDATE()
+    WHERE issued_id=%s
+    """,(issued_id,))
 
     conn.commit()
 
     cursor.close()
     conn.close()
 
-    return jsonify({"message": "Fine paid successfully"})
+    return jsonify({"message":"Fine paid successfully"})
 
 @user_routes.route("/user-dashboard/<int:user_id>",methods=["GET"])
 def user_dashboard(user_id):
@@ -282,3 +284,33 @@ def due_books(user_id):
     conn.close()
 
     return jsonify(books)
+
+@user_routes.route("/my-fine-history/<int:user_id>",methods=["GET"])
+def my_fine_history(user_id):
+
+    conn=get_db_connection()
+    cursor=conn.cursor(dictionary=True)
+
+    query="""
+    SELECT
+        books.title,
+        fines.amount,
+        fines.paid_date
+    FROM fines
+    JOIN issued_books
+        ON issued_books.id=fines.issued_id
+    JOIN books
+        ON books.id=issued_books.book_id
+    WHERE issued_books.user_id=%s
+        AND fines.paid=TRUE
+    ORDER BY fines.paid_date DESC
+    """
+
+    cursor.execute(query,(user_id,))
+
+    data=cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(data)

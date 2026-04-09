@@ -6,6 +6,7 @@ import MyBorrowedBooks from "./MyBorrowedBooks";
 import OverdueBooks from "./OverdueBooks";
 import BorrowHistory from "./BorrowHistory";
 import UserProfile from "../../components/layout/UserProfile";
+import FineHistory from "./FineHistory";
 
 function UserDashboard() {
   const [activePage, setActivePage] = useState("dashboard");
@@ -21,6 +22,7 @@ function UserDashboard() {
         {activePage === "borrowed" && <MyBorrowedBooks />}
         {activePage === "overdue" && <OverdueBooks />}
         {activePage === "history" && <BorrowHistory />}
+        {activePage === "fineHistory" && <FineHistory />}
       </div>
     </div>
   );

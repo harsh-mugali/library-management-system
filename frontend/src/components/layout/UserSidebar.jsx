@@ -8,6 +8,7 @@ function UserSidebar({ setActivePage }) {
                 <li onClick={() => setActivePage("borrowed")} className="cursor-pointer hover:bg-teal-600 p-3 rounded">My Borrowed Books</li>
                 <li onClick={() => setActivePage("overdue")} className="cursor-pointer hover:bg-teal-600 p-3 rounded">Overdue + Fine</li>
                 <li onClick={() => setActivePage("history")} className="cursor-pointer hover:bg-teal-600 p-3 rounded">Borrow History</li>
+                <li onClick={() => setActivePage("fineHistory")} className="cursor-pointer hover:bg-teal-600 p-3 rounded">Fine History</li>
             </ul>
         </div>
     );

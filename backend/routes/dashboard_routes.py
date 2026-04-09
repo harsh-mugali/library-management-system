@@ -88,3 +88,35 @@ def top_books():
     conn.close()
 
     return jsonify(data)
+
+@dashboard_routes.route("/fine-history",methods=["GET"])
+def fine_history():
+
+    conn=get_db_connection()
+    cursor=conn.cursor(dictionary=True)
+
+    query="""
+    SELECT
+        users.name AS user,
+        books.title AS book,
+        fines.amount,
+        fines.paid_date
+    FROM fines
+    JOIN issued_books
+        ON issued_books.id=fines.issued_id
+    JOIN users
+        ON users.id=issued_books.user_id
+    JOIN books
+        ON books.id=issued_books.book_id
+    WHERE fines.paid=TRUE
+    ORDER BY fines.paid_date DESC
+    """
+
+    cursor.execute(query)
+
+    data=cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(data)

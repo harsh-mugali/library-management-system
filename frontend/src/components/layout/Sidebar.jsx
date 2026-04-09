@@ -51,8 +51,8 @@ function Sidebar({ setActivePage }) {
                     Return Book
                 </li>
 
-                <li onClick={() => setActivePage("category")} 
-                className="cursor-pointer hover:bg-teal-500 p-3 rounded">Category</li>
+                <li onClick={() => setActivePage("category")}
+                    className="cursor-pointer hover:bg-teal-500 p-3 rounded">Category</li>
 
                 <li
                     onClick={() => setActivePage("users")}
@@ -61,8 +61,15 @@ function Sidebar({ setActivePage }) {
                     Users
                 </li>
 
-                <li onClick={()=>setActivePage("overdue")} 
-                className="hover:bg-teal-500 p-3 rounded cursor-pointer">Overdue Books</li>
+                <li onClick={() => setActivePage("overdue")}
+                    className="hover:bg-teal-500 p-3 rounded cursor-pointer">Overdue Books</li>
+
+                <li
+                    onClick={() => setActivePage("fineHistory")}
+                    className="hover:bg-teal-500 p-3 rounded cursor-pointer"
+                >
+                    Fine History
+                </li>
 
             </ul>
 
