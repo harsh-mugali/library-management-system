@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { getOverdueBooks, payFine } from "../../services/userService";
 import { toast } from "react-toastify";
+import SearchBar from "../../components/common/SearchBar";
+import {filterData} from "../../utils/filterData";
 
 function OverdueBooks() {
     const [books, setBooks] = useState([]);
+    const [search, setSearch] = useState("");
     const userId = localStorage.getItem("userId");
 
     useEffect(() => { loadBooks(); }, []);
@@ -12,6 +15,8 @@ function OverdueBooks() {
         const data = await getOverdueBooks(userId);
         setBooks(data);
     };
+
+    const filteredBooks = filterData(books, search, ["title"]);
 
     const handlePay = async (id) => {
         await payFine(id);
@@ -22,9 +27,19 @@ function OverdueBooks() {
     return (
         <div className="bg-white rounded-xl shadow">
 
-            <h2 className="text-xl font-semibold p-6 border-b sticky top-0 bg-white z-10">
-                Overdue Books
-            </h2>
+            <div className="flex justify-between items-center p-6 border-b sticky top-0 bg-white z-10">
+
+                <h2 className="text-xl font-semibold">
+                    Overdue Books
+                </h2>
+
+                <SearchBar
+                    placeholder="Search books..."
+                    value={search}
+                    onChange={setSearch}
+                />
+
+            </div>
 
             <div className="h-72 overflow-y-auto">
 
@@ -41,7 +56,7 @@ function OverdueBooks() {
                     </thead>
 
                     <tbody>
-                        {books.map(book => (
+                        {filteredBooks.map(book => (
                             <tr key={book.id} className="border-b">
                                 <td className="p-3">{book.title}</td>
                                 <td className="p-3 text-center">{new Date(book.due_date).toLocaleDateString()}</td>

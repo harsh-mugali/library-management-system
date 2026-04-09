@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { getMyBooks } from "../../services/userService";
+import SearchBar from "../../components/common/SearchBar";
+import {filterData} from "../../utils/filterData";  
 
 const formatDate = (date) => {
     return new Date(date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
@@ -7,8 +9,9 @@ const formatDate = (date) => {
 
 function MyBorrowedBooks() {
     const [books, setBooks] = useState([]);
+    const [search, setSearch] = useState("");
+
     const userId = localStorage.getItem("userId");
-    console.log("User ID:", userId);
 
     useEffect(() => { loadBooks(); }, []);
 
@@ -18,12 +21,24 @@ function MyBorrowedBooks() {
         setBooks(data);
     };
 
+    const filteredBooks=filterData(books,search,["title"]);
+
     return (
         <div className="bg-white rounded-xl shadow">
 
-            <h2 className="text-xl font-semibold p-6 border-b sticky top-0 bg-white z-10">
-                My Borrowed Books
-            </h2>
+            <div className="flex justify-between items-center p-6 border-b sticky top-0 bg-white z-10">
+
+                <h2 className="text-xl font-semibold">
+                    My Borrowed Books
+                </h2>
+
+                <SearchBar
+                    placeholder="Search books..."
+                    value={search}
+                    onChange={setSearch}
+                />
+
+            </div>
 
             <div className="h-72 overflow-y-auto">
 
@@ -38,7 +53,7 @@ function MyBorrowedBooks() {
                     </thead>
 
                     <tbody>
-                        {books.map(book => (
+                        {filteredBooks.map(book => (
                             <tr key={book.id} className="border-b">
                                 <td className="p-3">{book.title}</td>
                                 <td className="p-3 text-center">{formatDate(book.issue_date)}</td>

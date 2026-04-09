@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { getAvailableBooks } from "../../services/userService";
 import { toast } from "react-toastify";
+import SearchBar from "../../components/common/SearchBar";
+import {filterData} from "../../utils/filterData";
 
 function AvailableBooks() {
     const [books, setBooks] = useState([]);
+    const [search, setSearch] = useState("");
     const userId = localStorage.getItem("userId");
 
     useEffect(() => { loadBooks(); }, []);
@@ -13,12 +16,24 @@ function AvailableBooks() {
         setBooks(data);
     };
 
+        const filteredBooks=filterData(books,search,["title","author","category"]);
+
     return (
         <div className="bg-white rounded-xl shadow">
 
-            <h2 className="text-xl font-semibold p-6 border-b sticky top-0 bg-white z-10">
-                Available Books
-            </h2>
+            <div className="flex justify-between items-center p-6 border-b sticky top-0 bg-white z-10">
+
+                <h2 className="text-xl font-semibold">
+                    Available Books
+                </h2>
+
+                <SearchBar
+                    placeholder="Search books..."
+                    value={search}
+                    onChange={setSearch}
+                />
+
+            </div>
 
             <div className="h-80 overflow-y-auto">
 
@@ -34,7 +49,7 @@ function AvailableBooks() {
                     </thead>
 
                     <tbody>
-                        {books.map(book => (
+                        {filteredBooks.map(book => (
                             <tr key={book.id} className="border-b">
                                 <td className="p-3">{book.title}</td>
                                 <td className="p-3 text-center">{book.author}</td>
