@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import { returnBook } from "../../services/bookService";
 import { toast } from "react-toastify";
+import SearchBar from "../../components/common/SearchBar";
+import {filterData} from "../../utils/filterData";
 
 function ReturnBookPage() {
 
@@ -29,13 +31,27 @@ function ReturnBookPage() {
 
     };
 
+    const [search, setSearch] = useState("");
+
+    const filteredBooks=filterData(issuedBooks,search,["title","user"]);
+
     return (
 
         <div className="bg-white rounded-xl shadow">
 
-            <h2 className="text-xl font-semibold p-6 border-b sticky top-0 bg-white z-10">
-                Return Book
-            </h2>
+            <div className="flex justify-between items-center p-6 border-b sticky top-0 bg-white z-10">
+
+                <h2 className="text-xl font-semibold">
+                    Return Books
+                </h2>
+
+                <SearchBar
+                    placeholder="Search books..."
+                    value={search}
+                    onChange={setSearch}
+                />
+
+            </div>
 
             <div className="h-80 overflow-y-auto">
 
@@ -53,7 +69,7 @@ function ReturnBookPage() {
 
                     <tbody>
 
-                        {issuedBooks.map((book) => (
+                        {filteredBooks.map((book) => (
 
                             <tr key={book.id} className="border-b">
 

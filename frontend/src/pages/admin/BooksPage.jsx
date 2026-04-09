@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { getBooks, deleteBook, updateBook } from "../../services/bookService";
 import { toast } from "react-toastify";
+import SearchBar from "../../components/common/SearchBar";
+import {filterData} from "../../utils/filterData";
 
 function BooksPage() {
 
@@ -10,6 +12,8 @@ function BooksPage() {
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [editBook, setEditBook] = useState(null);
+
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetchBooks();
@@ -53,13 +57,25 @@ function BooksPage() {
 
   };
 
+  const filteredBooks=filterData(books,search,["title","author","category"]);
+
   return (
 
     <div className="bg-white rounded-xl shadow">
 
-      <h2 className="text-xl font-semibold p-6 border-b sticky top-0 bg-white z-10">
-        Books
-      </h2>
+      <div className="flex justify-between items-center p-6 border-b sticky top-0 bg-white z-10">
+
+        <h2 className="text-xl font-semibold">
+          Books
+        </h2>
+
+        <SearchBar
+          placeholder="Search books..."
+          value={search}
+          onChange={setSearch}
+        />
+
+      </div>
 
       <div className="h-80 overflow-y-auto">
 
@@ -78,7 +94,7 @@ function BooksPage() {
 
           <tbody>
 
-            {books.map((book) => (
+            {filteredBooks.map((book) => (
 
               <tr key={book.id} className="border-b">
 

@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import { toast } from "react-toastify";
+import SearchBar from "../../components/common/SearchBar";
+import {filterData} from "../../utils/filterData";
 
 function OverduePage() {
 
     const [books, setBooks] = useState([]);
     const [totalFine, setTotalFine] = useState(0);
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         fetchOverdue();
@@ -28,12 +31,24 @@ function OverduePage() {
         fetchFine();
     };
 
+    const filteredBooks=filterData(books,search,["title","user"]);
+
     return (
         <div className="bg-white rounded-xl shadow">
 
-            <h2 className="text-xl font-semibold p-6 border-b sticky top-0 bg-white z-10">
-                Overdue Books
-            </h2>
+            <div className="flex justify-between items-center p-6 border-b sticky top-0 bg-white z-10">
+
+                <h2 className="text-xl font-semibold">
+                    Overdue Books
+                </h2>
+
+                <SearchBar
+                    placeholder="Search books..."
+                    value={search}
+                    onChange={setSearch}
+                />
+
+            </div>
 
             <div className="mb-4 text-lg font-semibold sticky top-0 bg-gray-100 z-10 p-3 rounded">
                 Total Fine Collected: ₹{totalFine}
@@ -55,7 +70,7 @@ function OverduePage() {
 
                     <tbody>
 
-                        {books.map(book => (
+                        {filteredBooks.map(book => (
                             <tr key={book.id} className="border-b">
                                 <td className="p-3">{book.title}</td>
                                 <td className="p-3">{book.user}</td>

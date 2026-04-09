@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { getUsers, deleteUser } from "../../services/userService";
 import { toast } from "react-toastify";
+import SearchBar from "../../components/common/SearchBar";
+import {filterData} from "../../utils/filterData";
 
 function UsersPage() {
     const [users, setUsers] = useState([]);
+    const [search, setSearch] = useState("");
     useEffect(() => { fetchUsers(); }, []);
     const fetchUsers = async () => {
         const data = await getUsers();
@@ -14,12 +17,23 @@ function UsersPage() {
         toast.success("User deleted successfully");
         fetchUsers();
     };
+    const filteredUsers=filterData(users,search,["name","email"]);
     return (
-        <div className="bg-white rounded-xl shadow">
+        <div className="bg-white rounded-xl shadow"> 
 
-            <h2 className="text-xl font-semibold p-6 border-b sticky top-0 bg-white z-10">
-                Users
-            </h2>
+            <div className="flex justify-between items-center p-6 border-b sticky top-0 bg-white z-10">
+
+                <h2 className="text-xl font-semibold">
+                   Users
+                </h2>
+
+                <SearchBar
+                    placeholder="Search books..."
+                    value={search}
+                    onChange={setSearch}
+                />
+
+            </div>
 
             <div className="h-80 overflow-y-auto">
 
@@ -34,7 +48,7 @@ function UsersPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map((user) => (
+                        {filteredUsers.map((user) => (
                             <tr key={user.id} className="border-b hover:bg-gray-50">
                                 <td className="p-3">{user.name}</td>
                                 <td className="p-3 text-center">{user.email}</td>
