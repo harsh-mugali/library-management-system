@@ -2,11 +2,13 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import loginBg from "../assets/login.png";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function LoginPage() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -20,9 +22,9 @@ function LoginPage() {
 
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("role", res.data.role);
-            localStorage.setItem("userId",res.data.user.id);
-            localStorage.setItem("userName",res.data.user.name);
-            localStorage.setItem("userEmail",res.data.user.email);
+            localStorage.setItem("userId", res.data.user.id);
+            localStorage.setItem("userName", res.data.user.name);
+            localStorage.setItem("userEmail", res.data.user.email);
 
             toast.success("Login successful!");
 
@@ -83,24 +85,33 @@ function LoginPage() {
                             type="email"
                             placeholder="Email"
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full p-4 mb-5 rounded-lg
-          bg-white/10 border border-white/30
-          placeholder-gray-300 focus:outline-none focus:border-teal-400"
+                            className="w-full p-4 mb-5 rounded-lg bg-white/10 border border-white/30
+                          placeholder-gray-300 focus:outline-none focus:border-teal-400"
                         />
 
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full p-4 mb-6 rounded-lg
-          bg-white/10 border border-white/30
-          placeholder-gray-300 focus:outline-none focus:border-teal-400"
-                        />
+                        <div className="relative mb-6">
+
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Password"
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full p-4 rounded-lg bg-white/10 border border-white/30
+                                placeholder-gray-300 focus:outline-none focus:border-teal-400"
+                            />
+
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300"
+                            >
+                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                            </button>
+
+                        </div>
 
                         <button
-                            className="w-full py-3 rounded-lg
-          bg-gradient-to-r from-teal-400 to-cyan-500
-          hover:scale-[1.03] transition-all duration-300"
+                            className="w-full py-3 rounded-lg bg-gradient-to-r from-teal-400 to-cyan-500
+                            hover:scale-[1.03] transition-all duration-300"
                         >
                             LOGIN
                         </button>
