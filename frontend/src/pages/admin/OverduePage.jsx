@@ -64,7 +64,7 @@ function OverduePage() {
                             <th className="p-3">User</th>
                             <th className="p-3 text-center">Due Date</th>
                             <th className="p-3 text-center">Overdue Days</th>
-                            <th className="p-3 text-center">Action</th>
+                
                         </tr>
                     </thead>
 
@@ -76,9 +76,6 @@ function OverduePage() {
                                 <td className="p-3">{book.user}</td>
                                 <td className="p-3 text-center">{new Date(book.due_date).toLocaleDateString()}</td>
                                 <td className="p-3 text-center text-red-600 font-semibold">{book.overdue_days}</td>
-                                <td className="p-3 text-center">
-                                    <button onClick={() => applyFine(book.id)} className="bg-red-500 text-white px-3 py-1 rounded">Fine</button>
-                                </td>
                             </tr>
                         ))}
 
