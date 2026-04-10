@@ -6,10 +6,34 @@ export const exportData = (data, filename, type) => {
 
     if (!data.length) return;
 
+    const formattedData = data.map(row => {
+        const newRow = {};
+
+        for (const key in row) {
+
+            let value = row[key];
+
+            if (value) {
+
+                const date = new Date(value);
+
+                if (!isNaN(date)) {
+                    value = date.toLocaleDateString("en-GB", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric"
+                    });
+                }
+            }
+            newRow[key] = value;
+        }
+        return newRow;
+    });
+    
     if (type === "csv") {
 
-        const headers = Object.keys(data[0]);
-        const rows = data.map(row => headers.map(h => row[h]));
+        const headers = Object.keys(formattedData[0]);
+        const rows = formattedData.map(row => headers.map(h => row[h]));
 
         const csv = [headers, ...rows].map(e => e.join(",")).join("\n");
 
@@ -25,7 +49,7 @@ export const exportData = (data, filename, type) => {
 
     if (type === "excel") {
 
-        const worksheet = XLSX.utils.json_to_sheet(data);
+        const worksheet = XLSX.utils.json_to_sheet(formattedData);
         const workbook = XLSX.utils.book_new();
 
         XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
@@ -38,8 +62,8 @@ export const exportData = (data, filename, type) => {
 
         const doc = new jsPDF();
 
-        const headers = [Object.keys(data[0])];
-        const rows = data.map(obj => Object.values(obj));
+        const headers = [Object.keys(formattedData[0])];
+        const rows = formattedData.map(obj => Object.values(obj));
 
         autoTable(doc, {
             head: headers,
