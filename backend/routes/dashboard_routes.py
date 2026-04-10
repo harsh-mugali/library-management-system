@@ -120,3 +120,103 @@ def fine_history():
     conn.close()
 
     return jsonify(data)
+
+@dashboard_routes.route("/export-users",methods=["GET"])
+def export_users():
+
+    conn=get_db_connection()
+    cursor=conn.cursor(dictionary=True)
+
+    cursor.execute("""
+    SELECT
+        id,
+        name,
+        email,
+        role
+    FROM users
+    """)
+
+    users=cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(users)
+
+@dashboard_routes.route("/export-issued-books",methods=["GET"])
+def export_issued_books():
+
+    conn=get_db_connection()
+    cursor=conn.cursor(dictionary=True)
+
+    cursor.execute("""
+    SELECT
+        users.name AS user,
+        books.title AS book,
+        issue_date,
+        due_date
+    FROM issued_books
+    JOIN users ON users.id=issued_books.user_id
+    JOIN books ON books.id=issued_books.book_id
+    WHERE returned=FALSE
+    """)
+
+    data=cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(data)
+
+@dashboard_routes.route("/export-overdue-books",methods=["GET"])
+def export_overdue_books():
+
+    conn=get_db_connection()
+    cursor=conn.cursor(dictionary=True)
+
+    cursor.execute("""
+    SELECT
+        users.name AS user,
+        books.title AS book,
+        issued_books.due_date,
+        DATEDIFF(CURDATE(),issued_books.due_date) AS overdue_days
+    FROM issued_books
+    JOIN users ON users.id=issued_books.user_id
+    JOIN books ON books.id=issued_books.book_id
+    WHERE issued_books.returned=FALSE
+    AND issued_books.due_date<CURDATE()
+    """)
+
+    data=cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(data)
+
+
+@dashboard_routes.route("/export-fines",methods=["GET"])
+def export_fines():
+
+    conn=get_db_connection()
+    cursor=conn.cursor(dictionary=True)
+
+    cursor.execute("""
+    SELECT
+        users.name AS user,
+        books.title AS book,
+        fines.amount,
+        fines.paid_date
+    FROM fines
+    JOIN issued_books ON issued_books.id=fines.issued_id
+    JOIN users ON users.id=issued_books.user_id
+    JOIN books ON books.id=issued_books.book_id
+    WHERE fines.paid=TRUE
+    """)
+
+    data=cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(data)

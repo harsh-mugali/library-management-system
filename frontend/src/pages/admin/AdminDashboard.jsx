@@ -16,6 +16,8 @@ import AdminProfile from "../../components/layout/AdminProfile";
 import CategoryPage from "./CategoryPage";
 import OverduePage from "./OverduePage";
 import FineHistoryPage from "./FineHistoryPage";
+import { exportData } from "../../utils/exportCSV";
+import API from "../../utils/api";
 
 function AdminDashboard() {
 
@@ -31,6 +33,7 @@ function AdminDashboard() {
   const [chartData, setChartData] = useState([]);
   const [activities, setActivities] = useState([]);
   const [topBooks, setTopBooks] = useState([]);
+  const [showExport, setShowExport] = useState(false);
 
   useEffect(() => {
     loadDashboard();
@@ -55,6 +58,26 @@ function AdminDashboard() {
 
   };
 
+  const exportUsers = async (type) => {
+    const res = await API.get("/export-users");
+    exportData(res.data, "users_report", type);
+  };
+
+  const exportIssuedBooks = async (type) => {
+    const res = await API.get("/export-issued-books");
+    exportData(res.data, "issued_books_report", type);
+  };
+
+  const exportOverdueBooks = async (type) => {
+    const res = await API.get("/export-overdue-books");
+    exportData(res.data, "overdue_books_report", type);
+  };
+
+  const exportFines = async (type) => {
+    const res = await API.get("/export-fines");
+    exportData(res.data, "fines_report", type);
+  };
+
   return (
 
     <div className="flex min-h-screen bg-gray-100">
@@ -70,8 +93,64 @@ function AdminDashboard() {
           <>
 
             <div className="flex justify-between items-center mb-8">
+
               <h1 className="text-3xl font-bold">Dashboard</h1>
-              <AdminProfile />
+
+              <div className="flex items-center gap-4">
+
+                <div className="relative">
+
+                  <button
+                    onClick={() => setShowExport(!showExport)}
+                    className="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600"
+                  >
+                    Export Report
+                  </button>
+
+                  {showExport && (
+
+                    <div className="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-lg border z-50">
+
+                      <p className="px-4 py-2 text-gray-500 text-sm">Users</p>
+
+                      <button onClick={() => exportUsers("csv")} className="block w-full text-left px-4 py-2 hover:bg-gray-100">CSV</button>
+                      <button onClick={() => exportUsers("excel")} className="block w-full text-left px-4 py-2 hover:bg-gray-100">Excel</button>
+                      <button onClick={() => exportUsers("pdf")} className="block w-full text-left px-4 py-2 hover:bg-gray-100">PDF</button>
+
+                      <hr />
+
+                      <p className="px-4 py-2 text-gray-500 text-sm">Issued Books</p>
+
+                      <button onClick={() => exportIssuedBooks("csv")} className="block w-full text-left px-4 py-2 hover:bg-gray-100">CSV</button>
+                      <button onClick={() => exportIssuedBooks("excel")} className="block w-full text-left px-4 py-2 hover:bg-gray-100">Excel</button>
+                      <button onClick={() => exportIssuedBooks("pdf")} className="block w-full text-left px-4 py-2 hover:bg-gray-100">PDF</button>
+
+                      <hr />
+
+                      <p className="px-4 py-2 text-gray-500 text-sm">Overdue Books</p>
+
+                      <button onClick={() => exportOverdueBooks("csv")} className="block w-full text-left px-4 py-2 hover:bg-gray-100">CSV</button>
+                      <button onClick={() => exportOverdueBooks("excel")} className="block w-full text-left px-4 py-2 hover:bg-gray-100">Excel</button>
+                      <button onClick={() => exportOverdueBooks("pdf")} className="block w-full text-left px-4 py-2 hover:bg-gray-100">PDF</button>
+
+                      <hr />
+
+                      <p className="px-4 py-2 text-gray-500 text-sm">Fines</p>
+
+                      <button onClick={() => exportFines("csv")} className="block w-full text-left px-4 py-2 hover:bg-gray-100">CSV</button>
+                      <button onClick={() => exportFines("excel")} className="block w-full text-left px-4 py-2 hover:bg-gray-100">Excel</button>
+                      <button onClick={() => exportFines("pdf")} className="block w-full text-left px-4 py-2 hover:bg-gray-100">PDF</button>
+
+                    </div>
+
+                  )}
+
+                </div>
+
+                <AdminProfile />
+
+              </div>
+
             </div>
 
             <StatsCards stats={stats} />
@@ -114,7 +193,7 @@ function AdminDashboard() {
 
         {/* category page */}
 
-        {activePage === "category" && <CategoryPage/>}
+        {activePage === "category" && <CategoryPage />}
 
         {/* Overdue Books Page */}
 
